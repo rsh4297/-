@@ -1,0 +1,25 @@
+import copy
+def dfs(data,depth,leng,sub):   # data 비교할 숫자(배열) leng  입력숫자의 길이 , depth 탐색횟수 , sub 왼쪽부터 큰 수(작은수를 담기위함)
+    global cnt
+    if depth==leng:    # 탐색횟수(숫자배열길이)와 입력숫자의 길이 비교
+        cnt+=1
+        if cnt==n:     # n번째 감소 수 일치 비교
+            print(''.join(map(str,data)))
+            exit()
+        return 
+    for x in range(sub):    # 마지막 수 보다 작은 수 담기 ex )  985xx -> xx 에 담을수있는 수 range(5) [0,1,2,3,4]
+        tmp = copy.copy(data)
+        tmp.append(x)
+        dfs(tmp,depth+1,leng,x)  # 탐색횟수(숫자배열) 증가
+    return 
+
+cnt = 9
+n = int(input())
+if n<10:
+    print(n)
+else:
+    tf = 0
+    for i in range(2,11):
+        for j in range(1,10):
+            dfs([j],1,i,j)
+    print(-1)
