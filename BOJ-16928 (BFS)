@@ -1,0 +1,24 @@
+from collections import deque
+
+n,m = map(int,input().split())   # 사다리와 뱀의 수 입력
+next = [0]*101               # 현재 지점 표시
+dist = [0,0]+[-1]*100        # 최소 이동횟수 표시
+for i in range(1,101):       
+    next[i]=i           
+for _ in range(n+m):
+    a,b = map(int,input().split())
+    next[a] = b    # 사다리,뱀  [지점] = 이동 지점
+q = deque()
+q.append(1)
+while q:
+    x = q[0]
+    q.popleft()
+    for i in range(1,7):
+        y = x+i
+        if y>100:
+            break
+        y = next[y]     # 사다리,뱀 걸리면 해당지점 이동
+        if dist[y]==-1:
+            dist[y] = dist[x]+1
+            q.append(y)
+print(dist[100])
