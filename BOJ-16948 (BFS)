@@ -1,0 +1,25 @@
+from collections import deque  
+
+n = int(input())  # 규격 입력
+SX,SY,AX,AY = map(int,input().split())    #출발지점, 도착지점 입력
+dx = [-2,-2,0,0,2,2]
+dy = [-1,1,-2,2,-1,1]   # 이동 방향
+
+dist = [[-1]*n for _ in range(n)] # 체스판 이동횟수 초기화
+dist[SX][SY]=0
+
+q = deque()
+q.append((SX,SY))
+while q:
+    (x,y) = q.popleft()
+    for i in range(len(dx)):
+        nx = x+dx[i]
+        ny = y+dy[i]
+        if 0<=nx<n and 0<=ny<n:
+            if dist[nx][ny]==-1:
+                dist[nx][ny]=dist[x][y]+1
+                q.append((nx,ny))
+            if nx==AX and ny==AY:
+                print(dist[nx][ny])
+                exit()
+print(-1)
