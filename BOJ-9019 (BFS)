@@ -1,0 +1,42 @@
+import sys
+input = sys.stdin.readline
+
+mod = 10000
+def DSLR(n):
+    d = 2*n%mod
+    s = (n-1)%mod
+    l = n*10%mod + (n*10)//mod
+    r = (n%10)*1000 + n//10
+    return d,s,l,r
+
+for T in range(int(input())):
+    a,b, = map(int,input().split())
+    dp = [None for _ in range(10000)]  #  이동기록 배열
+    dp[a] = ['',None]         # 이동방법, 초기시작값(파생숫자) 초기화
+    res = ''
+    queue = [a]
+    while queue:
+        next_stage = []     # 새로 담을 숫자 배열
+        for i in queue:
+            D,S,L,R = DSLR(i)  # 각 이동루트 수행
+            if dp[D] == None:
+                dp[D] = 'D',i
+                next_stage.append(D)
+            if dp[S] == None:
+                dp[S] = 'S',i
+                next_stage.append(S)
+            if dp[L] == None:
+                dp[L] = 'L',i
+                next_stage.append(L)
+            if dp[R] == None:
+                dp[R] = 'R',i
+                next_stage.append(R)
+            if b in (D,S,L,R,i):
+                cur = b
+                while cur != None:          # 지나온 루트 출력
+                    res = dp[cur][0]+ res
+                    cur = dp[cur][1]
+                print(res)
+                next_stage = None  # 배열 초기화
+                break
+        queue = next_stage
