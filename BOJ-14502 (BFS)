@@ -1,0 +1,54 @@
+from collections import deque   # 벽이 3개뿐이라 (nm)^3  : 최대 nm*3  + 내부 탐색 (nm) = (nm)^4 = 64^4 = 16777216  / local : 1610953608.3270288  , server : 3460 ms
+import sys
+import copy
+input = sys.stdin.readline
+dx = [0,0,1,-1]
+dy = [1,-1,0,0]
+def bfs(data):
+    q = deque()
+    global n,m
+    comp = copy.deepcopy(data)
+    for i in range(n):
+        for j in range(m):
+            if comp[i][j]==2:
+                q.append((i,j))        # 독가스 근원지 찾기
+    while q:
+        x,y = q.popleft()
+        for i in range(4):
+            nx=x+dx[i]
+            ny=y+dy[i]
+            if 0<=nx<n and 0<=ny<m and comp[nx][ny]==0:    # 가스가 퍼지는 모든 구역
+                comp[nx][ny]=2
+                q.append((nx,ny))
+    cnt = 0
+    for i in range(n):
+        for j in range(m):
+            if comp[i][j]==0:   # 오염되지 않은 구역
+                cnt+=1
+    return cnt
+
+n,m = map(int,input().split())
+data = [[*map(int,input().split())] for _ in range(n)]
+ans = 0
+for x1 in range(n):
+    for y1 in range(m):
+        if data[x1][y1]!=0: continue  # 벽 1
+        for x2 in range(n):
+            for y2 in range(m):
+                if data[x2][y2]!=0: continue   # 벽 2
+                for x3 in range(n):
+                    for y3 in range(m):
+                        if data[x3][y3]!=0: continue  # 벽 3
+                        if x1==x2 and y1==y2: continue
+                        if x1==x3 and y1==y3: continue
+                        if x2==x3 and y2==y3: continue
+                        data[x1][y1]=1
+                        data[x2][y2]=1
+                        data[x3][y3]=1
+                        cur = bfs(data)
+                        if ans<cur:
+                            ans = cur
+                        data[x1][y1]=0
+                        data[x2][y2]=0
+                        data[x3][y3]=0
+print(ans)
