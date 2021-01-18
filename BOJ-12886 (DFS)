@@ -1,0 +1,64 @@
+import sys
+sys.setrecursionlimit(100000)   # 최대 재귀호출값 
+visited = {}                  # 반환값 저장(중복제거)
+x,y,z = map(int,input().split())
+ans = 0
+
+def dfs(key):
+    global ans
+    x,y,z = key[0],key[1],key[2]
+    if x==y==z:   # 값이 모두 같으면 1 리턴
+        ans = 1
+        return
+    visited[key] = True   #방문처리
+    if x<y:
+        if tuple(sorted([x+x,y-x,z])) not in visited:    # 작은값 < 큰값
+            dfs(tuple(sorted([x+x,y-x,z])))
+    if y<z:
+        if tuple(sorted([x,y+y,z-y])) not in visited:
+            dfs(tuple(sorted([x,y+y,z-y])))
+    if x<z:
+        if tuple(sorted([x+x,y,z-x])) not in visited:
+            dfs(tuple(sorted([x+x,y,z-x])))
+
+dfs(tuple(sorted([x,y,z])))
+print(ans)
+
+############################ + BFS
+
+from collections import deque
+
+def bfs(key):
+    global a,b,s
+    q = deque([[a,b]])
+    key[a][b] = True
+
+    while q:
+        x,y = q.popleft()
+        z = s-x-y
+        if x==y==z:
+            print(1)
+            return
+        for a,b, in [[x,y],[y,z],[z,x]]:
+            if a<b:
+                b -= a
+                a +=a
+            elif b<a:
+                a-=b
+                b+=b
+            else:
+                continue
+            c = s-a-b
+            X = min(a,b,c)
+            Y = max(a,b,c)
+            if not check[X][Y]:
+                q.append([X,Y])
+                check[X][Y] = True
+    print(0)
+a,b,c = map(int,input().split())
+s = a+b+c
+check = [[False]*s for _ in range(s)]
+if s%3!=0:
+    print(0)
+else:
+    bfs(check)
