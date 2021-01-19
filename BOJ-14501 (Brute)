@@ -1,0 +1,28 @@
+n = int(input())
+data = []
+for i in range(n):
+    data.append([*map(int,input().split())])
+ans = 0
+def dfs(day,s):
+    global ans
+    if day==n:
+        ans = max(ans,s)
+        return
+    if day>n:
+        return
+    dfs(day+1,s)
+    dfs(day+data[day][0],s+data[day][1])
+
+dfs(0,0)
+print(ans)
+
+
+######################################## + DP
+
+n = int(input())
+d = [0]*(n+15)
+for i in range(1,n+1):
+    t,p = map(int,input().split())
+    d[i] = max(d[i],d[i-1])     # 최대한 많은 상담
+    d[i+t] = max(d[i+t],d[i]+p)  # 앞에서 넘어온 값과 기본 값
+print(max(d[:n+2]))             # 마지막 상담이 1일인 경우까지
