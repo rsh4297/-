@@ -1,0 +1,31 @@
+from collections import deque
+dx = [0,0,1,-1]
+dy = [1,-1,0,0]
+
+
+n,m = map(int,input().split())
+data = [[*map(int,input())] for _ in range(n)]
+d = [[[0]*2 for _ in range(m)] for _ in range(n)]
+q = deque()
+q.append((0,0,0))
+d[0][0][0] = 1
+while q:
+    x,y,z = q.popleft()
+    for k in range(4):   # 각 방향에 따라 이동
+        nx = x+dx[k]
+        ny = y+dy[k]
+        if 0<=nx<n and 0<=ny<m:
+            if data[nx][ny]==0 and d[nx][ny][z]==0:  # 빈칸이면서 벽을 안부순상태의 빈칸
+                d[nx][ny][z] = d[x][y][z]+1
+                q.append((nx,ny,z))
+            if z==0 and data[nx][ny]==1 and d[nx][ny][z+1] ==0: # 벽을 부순적이없으면서
+                d[nx][ny][z+1] = d[x][y][z]+1               # 벽이며 부순상태의 빈칸
+                q.append((nx,ny,z+1))                   # 벽부숨
+if d[n-1][m-1][0]!= 0 and d[n-1][m-1][1]!=0:  # 한번도 안부수고 갈때 , 부수고갈때 모두 도착 가능 시 최소
+    print(min(d[n-1][m-1]))
+elif d[n-1][m-1][0] != 0:
+    print(d[n-1][m-1][0])
+elif d[n-1][m-1][1] != 0:
+    print(d[n-1][m-1][1])
+else:
+    print(-1)
