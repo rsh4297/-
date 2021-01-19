@@ -1,0 +1,27 @@
+import sys
+input = sys.stdin.readline
+from collections import deque
+n,m,k = map(int,input().split())
+data = [[*map(int,input().rstrip())] for _ in range(n)]
+c = [[[0]*m for _ in range(n)] for _ in range(k+1)]    # 벽뿌 횟수에 따른 배열선언 
+def bfs():
+    q = deque()
+    c[0][0][0]=1   # 시작
+    q.append((0,0,0))
+    while q:
+        z,x,y = q.popleft()
+        if x==n-1 and y==m-1:     #도착
+            return c[z][x][y]
+            exit()
+        for x_i,y_i in [[0,1],[0,-1],[1,0],[-1,0]]:
+            nx = x+x_i
+            ny = y+y_i
+            if not (0<=nx<n and 0<=ny<m): continue
+            if data[nx][ny]==0 and c[z][nx][ny]==0:   # 빈 칸이면서 방문 x
+                c[z][nx][ny] = c[z][x][y]+1
+                q.append((z,nx,ny))
+            if data[nx][ny]==1 and z<k and c[z+1][nx][ny]==0:  # 벽이면서 벽뿌가능 방문 x
+                c[z+1][nx][ny] = c[z][x][y]+1
+                q.append((z+1,nx,ny))
+    return -1
+print(bfs())
