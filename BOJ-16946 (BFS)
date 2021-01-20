@@ -1,0 +1,51 @@
+from collections import deque    # 조건문을 어떻게 쓰느냐에 따라 처리속도가 천차만별일 수 있다.
+import sys                        # 현재 진행중인 내부에서 호출을하거나 (안과 밖을 자주 왕래X) ,인자를 추가하여 사용
+input = sys.stdin.readline
+import copy
+dx = [0,0,1,-1]
+dy = [1,-1,0,0]
+op = dict()
+n,m = map(int,input().split())
+data = [[*map(int,input().rstrip())] for _ in range(n)]
+c = copy.deepcopy(data)
+check = [[False]*m for _ in range(n)]
+def grouping(x,y):        #  연결된 빈 칸을 찾아 그루핑 BFS
+    q = deque()
+    cnt=1
+    check[x][y] = True
+    q.append((x,y))
+    c[x][y]=mark
+    while q:  
+        _x,_y = q.popleft()
+        for k in range(4):
+            nx = _x+dx[k]
+            ny = _y+dy[k]
+            if 0<=nx<n and 0<=ny<m:
+                if c[nx][ny]==0 and check[nx][ny]==False: #check (시간단축)
+                    check[nx][ny]=True
+                    c[nx][ny] = mark
+                    cnt+=1
+                    q.append((nx,ny))
+    return cnt
+
+def bfs():
+    for i in range(n):
+        for j in range(m):
+            if data[i][j]==1:
+                visited = set()
+                for k in range(4):
+                    _nx = i+dx[k]
+                    _ny = j+dy[k]
+                    if 0<=_nx<n and 0<=_ny<m and data[_nx][_ny]==0:
+                        visited.add(c[_nx][_ny])  # 그룹번호 저장
+                for x in visited:
+                    data[i][j]+=op[x]
+                data[i][j]%=10
+        print(''.join(map(str,data[i])))
+mark=2
+for i in range(n):
+    for j in range(m):
+        if data[i][j]==0 and c[i][j]==0:
+            op[mark] = grouping(i,j)   #키,벨류 
+            mark+=1
+bfs()
