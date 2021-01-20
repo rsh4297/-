@@ -1,0 +1,84 @@
+from _collections import deque
+
+def bfs_water(data,water):    # 물길 순서 먼저 지정
+    q= deque()
+    visited = [[False] * m for _ in range(n)]
+    while water:
+        w_x,w_y = water.pop()         # 물 좌표 입력
+        q.append((w_x,w_y))
+        data[w_x][w_y]=0
+        visited[w_x][w_y]=True
+    while q:
+        x,y = q.popleft()
+        for _x,_y in (-1,0),(1,0),(0,1),(0,-1),(0,0): 
+            nx = x+_x
+            ny = y+_y
+            if 0>nx or nx>=n or 0>ny or ny>=m: continue
+            if visited[nx][ny]: continue
+            if type(data[nx][ny])==int:                 # 물길이 여러개인 때 처리된것 재처리
+                data[nx][ny] = min(data[nx][ny], data[x][y] + 1)
+                q.append((nx,ny))
+                visited[nx][ny] = True
+            elif data[nx][ny]=='.':       # 물길 처리
+                data[nx][ny]=data[x][y]+1
+                q.append((nx,ny))
+                visited[nx][ny] = True
+
+def gosuem(data):   #고슴도치 이동
+    #house_x,house_y = bibber.pop()
+    move = deque()
+    g_x,g_y = gochi[0],gochi[1]
+    move.append((g_x,g_y,0))
+    data[g_x][g_y]=0
+    visit = [[False]*(m+1) for _ in range(n+1)]
+    visit[g_x][g_y] = True
+    while move:
+        g_x,g_y,cnt = move.popleft()
+        for x_g,y_g in (0,1),(0,-1),(1,0),(-1,0),(0,0):
+            g_nx = g_x+x_g
+            g_ny = g_y+y_g
+            if 0>g_nx or g_nx>=n or 0>g_ny or g_ny>=m: continue
+            if visit[g_nx][g_ny]: continue
+            if g_nx==bibber[0] and g_ny==bibber[1]: return cnt+1    # 굴 발견
+            if data[g_nx][g_ny] == 'X': continue      #벽
+            if type(data[g_nx][g_ny])==int:             
+                if data[g_nx][g_ny]<= data[g_x][g_y]+1: continue    # 물길이 이미 지나간경우
+                visit[g_nx][g_ny]=True
+                data[g_nx][g_ny] = data[g_x][g_y]+1
+                move.append((g_nx,g_ny,cnt+1))
+            else: continue
+    return "KAKTUS"
+
+
+'''
+for i,x in enumerate(data): # 인덱스 오류
+    s = ''.join(map(str,x))
+    j = s.find('*')
+    while j!=-1:
+        water.append((i,j))
+        j = s.find('*',j+1)
+    d = s.find('D')
+    if d!=-1:
+        bibber.append((i,d))
+    g = s.find('S')
+    if g!=-1:
+        gochi.append((i,g))
+'''
+n,m = map(int,input().split())
+#data = [' '.join(input()).split(' ') for _ in range(n)]
+data =[]
+water = []
+bibber = []
+gochi = []
+for i in range(n):
+    s = input()
+    for x_ in range(len(s)):
+        if s[x_] == 'S':
+            gochi = [i,x_]
+        elif s[x_] =='D':
+            bibber = [i,x_]
+        elif s[x_] == '*':
+            water.append((i,x_))
+    data.append(list(s))
+bfs_water(data,water)
+print(gosuem(data))
