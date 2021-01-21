@@ -1,0 +1,56 @@
+from collections import deque         #상어의 움직임을 설명한 조건이 이해하기 어려웠음
+def bfs(data,x,y,body):   # 어항 , 몸집
+    n = len(data)     # 내부 인자로 크기 입력 (밖에서 입력한 n 을 가져오는것 자제)
+    ans = []
+    d =[[-1]*n for _ in range(n)] # 이동기록 
+    q = deque()
+    q.append((x,y))
+    d[x][y]=0
+    while q:
+        x,y = q.popleft()
+        for dx,dy in (0,1),(0,-1),(1,0),(-1,0):       
+            nx,ny = x+dx,y+dy
+            if 0<=nx<n and 0<=ny<n and d[nx][ny]==-1:
+                move = False
+                eat = False
+                if data[nx][ny]==0:
+                    move=True
+                elif data[nx][ny]<body:
+                    move =True
+                    eat = True
+                elif data[nx][ny] == body:
+                    move=True
+                if move:
+                    q.append((nx,ny))
+                    d[nx][ny]=d[x][y]+1
+                    if eat:
+                        ans.append((d[nx][ny],nx,ny)) #이동가능한 루트 기록 후 이동거리가 짧은 1개 
+    if not ans:
+        return None
+    ans.sort()
+    return ans[0]
+
+n = int(input())
+data = [[*map(int,input().split())] for _ in range(n)]
+for i in range(n):
+    for j in range(n):
+        if data[i][j]==9:
+            x,y = i,j
+            data[i][j] = 0
+
+ans = 0
+body = 2
+exp = 0
+while True:
+    p = bfs(data,x,y,body)  # 다음먹이까지의 최단거리 이동기록
+    if p is None:
+        break
+    dist,nx,ny = p
+    data[nx][ny] = 0
+    ans+=dist
+    exp+=1
+    if body==exp: # 몸집키우기
+        body+=1
+        exp=0
+    x,y = nx,ny
+print(ans)
