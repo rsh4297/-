@@ -1,0 +1,35 @@
+from collections import deque
+n = int(input())
+data = [input() for _ in range(n)]
+check = [[False] * n for _ in range(n)]
+check_on = [[False] * n for _ in range(n)]  # 색약
+
+def bfs(data,x,y,on,check): # 색약확인, 색약배열
+
+    s = data[x][y]
+    g = s
+    if on:
+        if s=='R': g='G'
+        if s=='G': g = 'R'
+    q = deque()
+    q.append((x,y))
+    check[x][y] = True
+    while q:
+        x_,y_ = q.popleft()
+        for dx,dy in (0,1),(0,-1),(1,0),(-1,0):
+            nx = x_+dx
+            ny = y_+dy
+            if 0<=nx<n and 0<=ny<n and check[nx][ny]==False:
+                if s==data[nx][ny] or g==data[nx][ny]:
+                    check[nx][ny] = True
+                    q.append((nx,ny))
+    return 1
+cnt = 0
+cnt_on = 0
+for i in range(n):
+    for j in range(n):
+        if check[i][j]==False:
+            cnt+=bfs(data,i,j,False,check)
+        if check_on[i][j]==False:
+            cnt_on+=bfs(data,i,j,True,check_on)
+print(cnt,cnt_on)
