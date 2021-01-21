@@ -1,0 +1,36 @@
+from collections import deque
+num = 100000
+dp = [False,False]+[True]*(num-1)
+for i in range(2,int((num**0.5))+1):  # 에라토스.. 체
+    if dp[i]:
+        for j in range(i+i,num+1,i):
+            dp[j]=False
+
+def change(now,i,j):            # 인덱스의 숫자 바꾸기
+    if i==0 and j==0: return -1
+    s = list(str(now))
+    s[i] = str(j)
+    return int(''.join(s))
+    
+for _ in range(int(input())):
+    n,m = map(int,input().split())
+    q = deque()
+    q.append(n)
+    cnt = [10001]*10001   # 횟수 체크
+    check = [False]*10001  # 중복 체크
+    check[n] = True
+    cnt[n] = 0
+    while q:
+        now = q.popleft()
+        for i in range(4):
+            for j in range(10):
+                next = change(now,i,j)
+                if next==-1:continue
+                if check[next]==False and dp[next]:
+                    check[next]=True
+                    cnt[next] = cnt[now]+1
+                    q.append(next)
+    if cnt[m]==10001:
+        print('Impossible')
+    else:
+        print(cnt[m])
