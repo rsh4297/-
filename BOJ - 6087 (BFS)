@@ -1,0 +1,26 @@
+from _collections import deque
+m,n = map(int,input().split())
+data = [input() for _ in range(n)]
+sx=sy=rx=ry=-1
+for i in range(n):
+    for j in range(m):
+        if data[i][j]=='C':
+            if sx==-1:
+                sx,sy = i,j
+            else:
+                rx,ry = i,j
+dist = [[-1]*m for _ in range(n)]
+q = deque()
+q.append((sx,sy))
+dist[sx][sy]=0      # 시작 
+while q:
+    x,y = q.popleft()
+    for dx,dy in (0,1),(0,-1),(1,0),(-1,0):
+        nx = x+dx
+        ny = y+dy
+        while 0<=nx<n and 0<=ny<m and data[nx][ny]!='*' and dist[nx][ny]==-1: # 벽, 방문x 
+            dist[nx][ny] = dist[x][y]+1
+            q.append((nx,ny))
+            nx+=dx
+            ny+=dy
+print(dist[rx][ry]-1)
