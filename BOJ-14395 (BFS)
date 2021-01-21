@@ -1,0 +1,27 @@
+from collections import deque
+INF = int(1e9)
+n,m = map(int,input().split())
+check = set()
+q = deque()
+q.append((n,''))
+check.add(n)
+while q:
+    x,s = q.popleft()
+    if x==m:
+        if len(s)==0: #  값이 같은경우
+            s='0'
+        print(s)
+        exit()
+    if 0<=x**2<=INF and x**2 not in check:  # 사전순 출력을 위한 연산순서
+        q.append((x**2,s+'*'))
+        check.add(x**2)
+    if 0<=x+x<=INF and x+x not in check:
+        q.append((x+x,s+'+'))
+        check.add(x+x)
+    if 0<=x-x<=INF and x-x not in check:
+        q.append((x-x,s+'-'))
+        check.add(x-x)
+    if x!=0 and 0<=x//x<=INF and x//x not in check:
+        q.append((x//x,s+'/'))
+        check.add(x//x)
+print(-1)
