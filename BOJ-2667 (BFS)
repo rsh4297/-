@@ -1,0 +1,31 @@
+from collections import deque
+n = int(input())
+data = [[*map(int,' '.join(input()).split(' '))] for _ in range(n)]
+
+def bfs(data,x,y):
+    q = deque()
+    q.append((x,y))
+    data[x][y]=0
+    cnt = 1
+    while q:
+        x_,y_ = q.popleft()
+        for dx,dy in (0,1),(0,-1),(1,0),(-1,0):
+            nx = x_+dx
+            ny = y_+dy
+            if 0<=nx<n and 0<=ny<n :
+                if data[nx][ny]==1:
+                    data[nx][ny] = 0
+                    cnt+=1
+                    q.append((nx,ny))
+    return cnt
+count = 0
+ans = []
+for i in range(n):
+    for j in range(n):
+        if data[i][j]!=0:
+            count+=1
+            ans.append(bfs(data,i,j))
+print(count)
+ans.sort()
+for i in range(len(ans)):
+    print(ans[i])
