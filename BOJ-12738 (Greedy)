@@ -1,0 +1,20 @@
+n = int(input())
+a = [*map(int,input().split())]
+b = [a[0]]
+c = dict()
+def change(num):      # 시간초과 걸림 (이분탐색)
+    s,e = 0,len(b)-1
+    while s<e:
+        mid = (s+e)//2
+        if b[mid] < num:
+            s = mid+1
+        else:
+            e = mid
+    return e
+    
+for i in range(1,n):
+    if a[i]>b[-1]:      # 작거나 같을때만 바꿈
+        b.append(a[i])
+    else:
+        b[change(a[i])]=a[i]
+print(len(b))
