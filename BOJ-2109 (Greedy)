@@ -1,0 +1,11 @@
+import heapq
+n = int(input())
+data = sorted([[*map(int,input().split())] for _ in range(n)],key=lambda x:x[1])
+q = []
+res = []
+for i in range(10000,0,-1):
+    while data and i<=data[-1][1]:  
+        heapq.heappush(q,-data.pop()[0])    # 우선순위를 위한 음수처리(큰 수 먼저 배출)
+    if q:
+        res.append(-heapq.heappop(q)) # 양수 처리
+print(sum(res))
