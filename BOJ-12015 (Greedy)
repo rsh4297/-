@@ -1,0 +1,20 @@
+n = int(input())
+data = [*map(int,input().split())]
+c = [data[0]]
+def change(x):          #이분탐색
+    s,e = 0,len(c)-1
+    while s<e:
+        mid = (s+e)//2
+        if c[mid]<x:
+            s = mid+1
+        else:
+            e = mid
+    return e
+
+for x in data:
+    if c[-1]<x:       # 큰수면 바로 추가
+        c.append(x)
+    else:             #작거나 같으면 교체
+        c[change(x)]=x
+
+print(len(c))
