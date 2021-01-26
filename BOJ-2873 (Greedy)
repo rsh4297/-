@@ -1,0 +1,63 @@
+n,m = map(int,input().split())
+data = [[*map(int,input().split())] for _ in range(n)]    # 문제를 풀기 전 체스판의 검,흰 방문 공식? 을 알아야 
+                                                    # 접근방법이 눈에 보인다.  그렇지 않으면 꽤나 고생할 수 있다. (나처럼)
+
+if n%2==0 and m%2==0:
+    ans = ''
+    mini,x,y = 1001,0,0
+    for i in range(n):
+        for j in range(m):
+            if (i+j)%2 and mini>data[i][j]: # 체스판 흰.검 공식으로 최솟값(검) 찾기
+                mini = data[i][j]
+                x,y = i,j
+    stop_left = x-1 if x%2 else x   #최솟값의 행 (행이 홀수행인 경우 최솟값행의 위 까지만)
+    for i in range(stop_left):      #최솟값행의 이전은 모두 ㄹ자 형태로 출력
+        for j in range(m-1):
+            if i%2==0:
+                print('R',end='')
+            else:
+                print('L',end='')
+        print('D', end='')
+    stop_left_down = y              # 최솟값의 열
+    for i in range(y):              #막힌곳이 위(막힌곳의 열=홀수), 아래에 올때까지(막 열=짝수)
+        if i%2==0:
+            print('DR',end='')
+        else:
+            print('UR',end='')
+    for i in range(stop_left_down,m-1):  # 막힌곳이 아래에 위치한다면 RD , 위면 RU //이때 지나침
+        if i%2==0:
+            print('RD',end='')
+        else:
+            print('RU',end='')
+    if x%2==0:                  # 행이 홀수행이라면 바로 아래부터 , 짝수라면 왼쪽부터 하기위함
+        stop_left = n-(x+2)
+    else:
+        stop_left = n-(x+1)
+    for i in range(stop_left):      # 남은 구간 처리
+        print('D',end='')
+        for j in range(m-1):
+            if i%2==0:
+                print('L',end='')
+            else:
+                print('R',end='')
+
+else:
+    r, d, l = 'R','D','L'
+    if n%2==0:
+        n,m = m,n
+        sol = {'R':'D','D':'R','L':'U'}
+        r,d,l = sol[r],sol[d],sol[l]
+    Toggle = True
+    for i in range(n):
+        if Toggle:
+            for j in range(m-1):
+                print(r,end='')
+            if i==n-1:
+                break
+            Toggle=False
+            print(d,end='')
+        else:
+            for j in range(m-1):
+                print(l,end='')
+            Toggle=True
+            print(d,end='')
