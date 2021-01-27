@@ -1,0 +1,41 @@
+n = int(input())
+inorder = [*map(int,input().split())]
+postorder = [*map(int,input().split())]
+
+def sol(n,in_,post_):
+    res = []; queue = [[0,n-1,0,n-1]]
+    data = [0 for _ in range(n+1)]
+    for i in range(n):
+        data[in_[i]]=i      # 루트노드 기준
+    while queue:
+        s,e,s_,e_ = queue.pop()
+        res.append(post_[e_])
+        root = data[post_[e_]]
+        left = root-s
+        if 0<=root<e:
+            queue.append([root+1,e,s_+left,e_-1])
+        if 0<= s < root:
+            queue.append([s,root-1,s_,s_+left-1])
+    return res
+print(*sol(n,inorder,postorder))
+
+
+######################### + 재귀.ver
+
+data = [0]*100001
+import sys
+sys.setrecursionlimit(10**9)
+def sol(s,e,s_,e_):
+    if s>e or s_>e_: return
+    print(postorder[e_],end=' ')
+    root = position[postorder[e_]]
+    left = root - s
+    sol(s,root-1,s_,s_+left-1)
+    sol(root+1,e,s_+left,e_-1)
+
+n = int(input())
+inorder = [*map(int,input().split())]
+postorder = [*map(int,input().split())]
+for i in range(n):
+    data[inorder[i]] = i
+sol(0,n-1,0,n-1)
