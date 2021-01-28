@@ -1,0 +1,73 @@
+n,s = list(map(int,input().split()))
+m = n
+s = str(s)
+x_,y_ = map(int,input().split())
+a,b = 0,0
+for i in range(len(s)):
+    if n==1:
+        if s[i]=='1': b+=1
+        elif s[i]=='3': a+=1
+        elif s[i]=='4':a+=1;b+=1
+        break
+    if s[i]=='1':
+        b+=2**(n-1)
+    elif s[i]=='3':
+        a+=2**(n-1)
+    elif s[i]=='4':
+        a+=2**(n-1);b+=2**(n-1)
+    n-=1
+a-=y_;b+=x_
+ans =''
+def sol(m,x,y):
+    global ans
+    if m==1:
+        if x==0 and y==0: ans+='2';return
+        elif x==0 and y==1: ans+='1';return
+        elif x==1 and y==0: ans+='3';return
+        elif x==1 and y==1: ans+='4';return
+    if 0<=x<=2**(m-1)-1 and 0<=y<=2**(m-1)-1:
+        ans+='2'
+        return sol(m-1,x,y)
+    elif 0<=x<2**(m-1)-1 and 2**(m-1)<=y<=(2**m)-1:
+        ans+='1'
+        return sol(m-1,x,y-(2**(m-1)))
+    elif 2**(m-1)<=x<=(2**m)-1 and 0<=y<=2**(m-1)-1:
+        ans+='3'
+        return sol(m-1,x-(2**(m-1)),y)
+    elif 2**(m-1)<=x<=(2**m)-1 and 2**(m-1)<=y<=(2**m)-1:
+        ans+='4'
+        return sol(m-1,x-(2**(m-1)),y-(2**(m-1)))
+sol(m,a,b)
+if ans=='':
+    print(-1)
+else:
+    print(ans)
+    
+    ####################################### 이렇게 무식하게 작성하는건 자제해야겠다
+    
+    import sys
+
+d, s=map(str, input().split())
+d=int(d)
+dx, dy=map(int, input().split())
+dy*=(-1)
+x, y=0, 0
+
+for i in range(1, d+1) :
+    n=int(s[i-1])
+    if(n==1 or n==4) : x+=(2**(d-i))
+    if(n==3 or n==4) : y+=(2**(d-i))
+
+x, y=x+dx, y+dy
+ans=''
+if(x<0 or y<0 or x>=2**d or y>=2**d) : print(-1); sys.exit(0)
+for i in range(1, d+1) :
+    k=2**(d-i)
+    ch=0
+    if(x>=k) : ch+=1; x-=k
+    if(y>=k) : ch+=3; y-=k
+    if(ch!=0) : ans+=str(ch)
+    if(ch==0) : ans+=str(2)
+
+print(ans)
+[출처] [Python] [백준] 1891 - 사분면|작성자 Dolzar  # Dolzar 님처럼 불필요하게 중복되거나 낭비되는 코드는 빼고 작성하자
