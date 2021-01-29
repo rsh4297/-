@@ -1,0 +1,25 @@
+import heapq
+n = int(input())
+data = []
+for i in range(n):
+    l,h,r = map(int,input().split()) # 좌, 높, 우 입력
+    data.append((l,0,-h,i))         # 좌 0 -높 인덱스 (0,1 = 좌,우)/(i = 재처리)
+    data.append((r,1,h,i))          # 우 1 높 인덱스
+
+pq = []         # 우선순위 큐
+data.sort()     # 정렬
+
+use = [False]*n
+print(data)
+for x,end,h,i in data:
+    if not end:     # 좌항 확인           (높이가 갱신되는 건물)
+        h = -h          # 높이 양수처리
+        if (not pq) or -pq[0][0]<h: print(x,h,end=' ')  # 큐가 비어있거나 큐의높이보다 큰경우
+        heapq.heappush(pq,(-h,x,i))         # 큐에 (-높,좌,인덱스) 다시 삽입
+
+    else:           # 우항 확인           (건물의 끝, 이어지는 건물연결 처리)=> 하나의 건물이 끝나는 지점
+        use[i]=True     # 건물 방문처리
+        if -pq[0][0]==h:    # 높이 비교를 위한 양수처리
+            while pq and pq[0][1]<x and use[pq[0][2]]: heapq.heappop(pq) 
+            if not pq: print(x,0,end=' ') # 연결된 건물이 없음
+            elif -pq[0][0]<h: print(x,-pq[0][0],'뭘까',end=' ')#연결된 건물의 높이
