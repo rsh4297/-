@@ -22,4 +22,4 @@ for x,end,h,i in data:
         if -pq[0][0]==h:    # 높이 비교를 위한 양수처리
             while pq and pq[0][1]<x and use[pq[0][2]]: heapq.heappop(pq) 
             if not pq: print(x,0,end=' ') # 연결된 건물이 없음
-            elif -pq[0][0]<h: print(x,-pq[0][0],'뭘까',end=' ')#연결된 건물의 높이
+            elif -pq[0][0]<h: print(x,-pq[0][0],end=' ')#연결된 건물의 높이
