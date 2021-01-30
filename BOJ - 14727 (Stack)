@@ -1,0 +1,15 @@
+import sys                  # 스택 구현에 충실한 문제
+input = sys.stdin.readline
+
+n = int(input())
+data = [0]+[int(input()) for _ in range(n)]   # 처음~끝 구간 계산
+data.append(0)
+res = 0
+stack = [0]
+for i in range(1,len(data)):
+    while data[stack[-1]]>data[i]:    # 작아서 막히는 경우만
+        h = stack.pop()               
+        x = i-1-stack[-1]             # 높->낮 순서로 최대값 갱신
+        res = max(res,x*data[h])
+    stack.append(i)
+print(res)
