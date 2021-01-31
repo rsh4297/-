@@ -1,0 +1,19 @@
+n,k = map(int,input().split())
+data =[int(input()) for _ in range(n)]
+
+def sol(num):
+    ans = 0
+    for x in data:
+        ans += x//num
+    return ans>=k
+s,e = 1,max(data)
+ans = 0
+while s<=e:
+    mid = (s+e)//2
+    if sol(mid):
+        if ans<mid:
+            ans = mid
+        s = mid+1
+    else:
+        e = mid-1
+print(ans)
