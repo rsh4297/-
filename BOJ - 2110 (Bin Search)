@@ -1,0 +1,25 @@
+import sys
+input = sys.stdin.readline
+n,m = map(int,input().split())
+data = sorted([int(input()) for _ in range(n)])
+
+def sol(num):
+    mini=data[0];cnt=0
+    if (m-1)*num<=data[-1]-mini:  # 공유기(거리)x(개수)<=가능거리
+        for x in data:
+            if x-mini>=num: # 최소거리
+                cnt+=1
+                mini = x
+    return cnt>=(m-1)
+
+n=0
+s,e = 0,data[-1]
+while s<e:
+    mid = (s+e)//2
+    if sol(mid):
+        if n<mid:
+            n = mid
+        s = mid+1
+    else:
+        e= mid
+print(n)
