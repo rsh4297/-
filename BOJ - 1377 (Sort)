@@ -1,0 +1,12 @@
+n= int(input())
+data = [[0]*(2) for _ in range(n) ]
+for i in range(n):
+    data[i][0] = int(input())
+    data[i][1]=i
+
+data.sort()
+ans = 0
+for i in range(n):
+    if data[i][1]-i>ans:
+        ans = data[i][1]-i
+print(ans+1)  # 문제에서 1부터 시작
