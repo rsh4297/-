@@ -1,0 +1,26 @@
+def check(m):           # 해당 숫자의 글자길이
+    start=1;cnt=1;res=0
+    m = int(m)
+    while start<=m:
+        end = start*10-1
+        if end>m:
+            end = m
+        res += (end-start+1)*cnt
+        start*=10;cnt+=1
+    return res
+n,k = map(int,input().split())
+if check(n)<k:        # n 까지 숫자길이가 k 보다작음 종료
+    print(-1);exit()
+s = 1;e=n
+ans = 0
+while s<=e:
+    mid = (s+e)//2      # 1 ~ n 사이의 숫자 탐색 (k가 가리키는 숫자)
+    R = check(mid)
+    if R<k:
+        s=mid+1
+    else:
+        e=mid-1
+        ans = mid
+s = str(ans)    # 해당숫자 
+l = check(s)
+print(s[len(s)-(l-k)-1])
