@@ -1,0 +1,67 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)    # 재귀초과
+def dfs(C,node,num):        #시작~끝 가능한것
+    if C[node]:
+        return False
+    C[node] = True
+    if node == k:
+        return True
+    for x in data[node]:
+        next = x[0]
+        dist = x[1]
+        if dist>=num:
+            if dfs(C,next,num):
+                return True
+    return False
+n,m = map(int,input().split())
+data=[[] for _ in range(n+1)]
+for _ in range(m):
+    a,b,c = map(int,input().split())
+    data[a].append((b,c))
+    data[b].append((a,c))
+
+c,k = map(int,input().split())
+s,e = 1,10**9;ans = 0
+C = [False] * (n + 1)
+def Clear(arr):
+    for i in range(len(arr)):
+        if arr[i]==True:
+            arr[i]=False
+
+while s<e:
+    mid = (s+e)//2
+    if dfs(C,c,mid):
+        if ans<mid:
+            ans = mid
+        s = mid+1
+    else:
+        e = mid
+    print(s,e,mid)
+    Clear(C)          # 메모리 초과발생때문
+print(ans)
+############################################ + 클래스를 활용한 풀이 (Union-find) # arjasc521님의 코드
+
+input = __import__('sys').stdin.readline      # 나도 클래스 가지고 놀고 싶다
+
+class DisjointSet:
+    def __init__(self, n): self.par = list(range(n+1))
+    def union(self, x, y): self.par[self.find(x)] = self.find(y)
+    def find(self, x):
+        if self.par[x] != x: self.par[x] = self.find(self.par[x])
+        return self.par[x]
+
+n,m = map(int,input().split())
+D = DisjointSet(n)
+l = []
+for _ in range(m):
+    a,b,c, = map(int,input().split())
+    l.append((c,a,b))
+l.sort()
+ans = 0
+a,b = map(int,input().split())
+while D.find(a)!=D.find(b):
+    c,aa,bb = l.pop()
+    D.union(aa,bb)
+    ans = c
+print(ans)
