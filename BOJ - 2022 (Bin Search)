@@ -1,0 +1,16 @@
+import math                                 # 삼각형의 닮음 x'/d = > c/d1
+x,y,c = map(float,input().split())                        # y'/d = > c/d2  
+                                                          # d = d1+d2 , c = x'*y'/x'-y'  
+def sol(x,y):
+    a = math.sqrt(x)
+    b = math.sqrt(y)
+    return (a*b)/(a+b)
+
+s, e = 0, min(x, y)
+for k in range(0,10000):    # 10^-3 => 1/2^10000
+    mid = (s+e)/2
+    if sol(x*x-mid*mid,y*y-mid*mid)>c:
+        s = mid
+    else:
+        e = mid
+print("{:.3f}".format(mid))
