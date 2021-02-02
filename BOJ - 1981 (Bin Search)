@@ -1,0 +1,39 @@
+import sys;input =sys.stdin.readline
+from _collections import deque
+n = int(input())
+data = [[*map(int,input().split())] for _ in range(n)] # 다시한번 느끼지만 pypy3 는 메모리에 너무 민감하다.
+                # 차이값의 최소값을 구함 => 0~200 사이이므로 138*100*100*4 => 5000000 (500ms)  응! 아니야! (201964KB, 2020ms)
+
+def bfs(mini,maxi):
+    if data[0][0]>maxi or data[0][0]<mini:
+        return False
+    q = deque()
+    check = set([(0,0)])
+    q.append((0,0))
+    while q:
+        x,y = q.popleft()
+        if x==n-1 and y==n-1:
+            return True
+        for dx,dy in (1,0),(-1,0),(0,1),(0,-1):
+            nx=x+dx;ny=y+dy
+            if 0<=nx<n and 0<=ny<n:
+                if mini<=data[nx][ny]<=maxi and (nx,ny) not in check:
+                    q.append((nx,ny));check.add((nx,ny))
+    return False
+def sol(num):
+    tmp = 0
+    while tmp+num<=200:
+        if bfs(tmp,tmp+num):
+            return True
+        tmp+=1
+    return False
+s=0;e=ans=200
+while s<=e:
+    mid = (s+e)//2
+    if sol(mid):
+        if ans>mid:
+            ans = mid
+        e = mid - 1
+    else:
+        s = mid + 1
+print(ans)
