@@ -1,0 +1,109 @@
+import sys; input =sys.stdin.readline
+n,m = map(int,input().split())
+data = [input() for _ in range(n)]
+alp = set(data[0][0])
+ans = 0
+def dfs(data,x,y,alp):
+    global ans
+    for dx,dy in (1,0),(-1,0),(0,1),(0,-1):
+        nx = dx+x; ny = dy+y
+        if 0>nx or n<=nx or 0>ny or m<=ny:continue
+        if data[nx][ny] not in alp:                     # set 에서 in,add,remove 모두 O(1) 소요되는데 왜..
+            alp.add(data[nx][ny])
+            ans = max(ans,len(alp))
+            if not dfs(data,nx,ny,alp):
+                alp.remove(data[nx][ny])
+        print(nx,ny,alp,ans)
+    return False
+dfs(data,0,0,alp)
+print(ans)                
+##################################################### 시간초과  => 백트래킹할 임의값을 찾지못함 + 무분별한(불필요한) 반복
+
+import sys
+from collections import deque
+read=sys.stdin.readline
+sys.setrecursionlimit(10000)
+n,m = map(int,read().split())
+board = list(list(read().strip()) for _ in range(n))
+visited = list(1 for _ in range(ord('Z')+1))
+
+answer = 0
+
+def dfs(a,b,cnt):
+    answer = cnt
+    visited[ord(board[a][b])] = 0
+    #for x,y in ((1,0), (0,1), (0,-1), (-1,0)):
+    #    ax, by = a+x, b+y
+    #    if 0<=ax<n and 0<=by<m and visited[ord(board[ax][by])]:
+    #        answer = max(answer , dfs(ax,by,cnt + 1))
+    
+    if a < n-1 and visited[ord(board[a+1][b])]:     # 딱 봐도 안될것 같은데 통과된 코드이다. 뭘까
+        answer = max(answer, dfs(a+1,b,cnt+1))      # 그리고 문제분류는 DFS 와 백트래킹으로 구현하는것인데 정답코드들을 
+    if b < m-1 and visited[ord(board[a][b+1])]:     # 보면 DFS 를 찾기가 힘들다 대부분 BFS로 구현하였다.
+        answer = max(answer, dfs(a,b+1,cnt+1))
+    if a > 0 and visited[ord(board[a-1][b])]:
+        answer = max(answer, dfs(a-1,b,cnt+1))
+    if b > 0 and visited[ord(board[a][b-1])]:
+        answer = max(answer, dfs(a,b-1,cnt+1))
+
+    visited[ord(board[a][b])] = 1
+    return answer
+
+print(dfs(0,0,1))
+
+############################################################
+
+from collections import deque
+directions = [[0, 1],[1, 0],[-1, 0],[0, -1]]
+sen = ""
+R, C = map(int, input().split())
+mv = 0
+
+
+def bfs():
+    global mv
+    q = deque()
+    q.append([board[0][0], 0, 0])
+    while q:
+        sentence, row, col = q.pop()
+        mv = max(len(sentence), mv)
+        if mv >= 26:
+            break
+        for i in range(4):
+            mr = row + directions[i][0]
+            mc = col + directions[i][1]
+            if 0 <= mr < R and 0 <= mc < C and board[mr][mc] not in sentence:
+                if alpha[mr][mc] == sentence + board[mr][mc]:
+                    continue
+                q.append([sentence + board[mr][mc], mr, mc])
+                alpha[mr][mc] = sentence + board[mr][mc]    # 백트래킹 + BFS  (분명 여기까지 접근했는데 머리로 대충 생각해보고
+                                                            # 안될거라 생각해서 지금 몇시간을 뺏겼다. 다음부턴 꼭 쓰면서 풀자) 안좋은 머리로 뭘...
+
+board = []
+for _ in range(R):
+    board.append(list(input()))
+alpha = [[''] * C for _ in range(R)]
+bfs()
+print(mv)
+################################################################################################
+
+import sys; input =sys.stdin.readline       # 통과코드
+sys.setrecursionlimit(10**9)
+n,m = map(int,input().split())
+data = [input() for _ in range(n)]
+alp = '{:s}'.format(data[0][0])
+alp_save = [['']*m for _ in range(n)]
+ans = 1
+def dfs(data,x,y,alp):
+    global ans
+    for dx,dy in (1,0),(-1,0),(0,1),(0,-1):
+        nx = dx+x; ny = dy+y
+        if 0>nx or n<=nx or 0>ny or m<=ny:continue
+        if data[nx][ny] not in alp:
+            if not alp_save[nx][ny]==alp+data[nx][ny]:  # 백트래킹 + DFS   (기나긴 싸움이었다.)
+                ans = max(ans,len(alp)+1)
+                alp_save[nx][ny] = alp + data[nx][ny]
+                dfs(data,nx,ny,alp+data[nx][ny])
+    return False
+dfs(data,0,0,alp)
+print(ans)
