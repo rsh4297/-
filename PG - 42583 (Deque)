@@ -1,0 +1,23 @@
+from _collections import deque
+def solution(length,weight,data):
+    q = deque(data)
+    running = deque() # 이동중
+    start = deque()   # 이동시작점~ 끝
+    def run():
+        for i in range(len(start)): #이동
+            start[i][0]+=1
+        if start[0][0]==length:   # 도착
+            start.popleft()
+            running.popleft()
+        if q:                     # 새 트럭 진입 검사
+            if weight>=q[0]+sum(running):
+                running.append(q.popleft())
+                start.append([0,running[-1]])
+    cnt = 1
+    while q or running:
+        if not running:
+            running.append(q.popleft())
+            start.append([0,running[-1]])
+        cnt+=1
+        run()
+    return cnt
