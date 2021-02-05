@@ -1,0 +1,64 @@
+def square(x,y):
+    return (x//3)*3+(y%3)
+def change(coordinate):
+    return (ord(coordinate[0])-ord('A'),ord(coordinate[1])-ord('1'))
+def sol(start):
+    if start==9**2:
+        for i in range(9):
+            print(''.join(map(str,data[i])))
+        return True
+    x,y = start//9,start%9
+    if data[x][y]!=0:
+        sol(start+1)
+    else:
+        for dx,dy in (0,1),(1,0): # ↓ , → 로만 이동
+            nx=x+dx;ny=y+dy
+            if 0>nx or 9<=nx or 0>ny or 9<=ny:continue
+            if data[nx][ny]!=0:continue
+            for i in range(10):
+                for j in range(10): # 모두 탐색
+                    if i==j:continue
+                    if domino[i][j]:continue
+                    if not c[x][i] and not c2[y][i] and not c3[square(x,y)][i] \
+                        and not c[nx][j] and not c2[ny][j] and not c3[square(nx,ny)][j]:
+                        c[x][i]=c2[y][i]=c3[square(x,y)][i]=True
+                        c[nx][j]=c2[ny][j]=c3[square(nx,ny)][j]=True
+                        domino[i][j]=domino[j][i]=True
+                        data[x][y]=i;data[nx][ny]=j
+                        if sol(start+1):
+                            return True
+                        c[x][i] = c2[y][i] = c3[square(x, y)][i] = False
+                        c[nx][j] = c2[ny][j] = c3[square(nx, ny)][j] = False
+                        domino[i][j] = domino[j][i] = False
+                        data[x][y]=0;data[nx][ny]=0
+    print(start)
+    return False
+
+x = int()
+while True:
+    x+=1
+    n = int(input())
+    if n==0:
+        break
+    print('Puzzle {:d}'.format(x))
+    c = [[False]*10 for _ in range(10)] # 가로  // 필요한 변수선언
+    c2 = [[False]*10 for _ in range(10)] # 세로
+    c3 = [[False]*10 for _ in range(10)] # square 함수활용 3차원X
+    data = [[0]*10 for _ in range(10)] # 스도쿠
+    domino = [[False]*10 for _ in range(10)] # 도미노 타일
+    for i in range(n):
+        num,cor,num2,cor2 = input().split() #연결된 도미노 -> 각 변수에 할당
+        num=int(num);num2=int(num2)
+        x1,y1 = change(cor);x2,y2 = change(cor2)  # 좌표 배열 할당 //num 스도쿠할당
+        c[x1][num]=c[x2][num2]=True
+        c2[y1][num]=c2[y2][num2]=True
+        c3[square(x1,y1)][num]=c3[square(x2,y2)][num2]=True
+        domino[num][num2]=domino[num2][num]=True
+        data[x1][y1]=num;data[x2][y2]=num2
+    number = list(map(lambda x:change(x),input().split()))
+    for i,cor in enumerate(number):
+        data[cor[0]][cor[1]] = i+1
+        c[cor[0]][i+1] = True
+        c2[cor[1]][i+1] = True
+        c3[square(cor[0],cor[1])][i+1] = True
+    sol(0)
