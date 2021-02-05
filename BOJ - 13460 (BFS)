@@ -1,0 +1,47 @@
+from _collections import deque
+n,m = map(int,input().split())
+data = [list(input()) for _ in range(n)]
+
+def move(x,y,dx,dy):
+    cnt=0
+    while data[y+dy][x+dx]!='#' and data[y][x]!='O':
+        x+=dx
+        y+=dy
+        cnt+=1
+    return y,x,cnt
+def sol():
+    visited = {}
+    for y,b in enumerate(data):
+        for x,r in enumerate(b):
+            if r=='R':
+                rx,ry = x,y
+            if r=='B':
+                bx,by = x,y
+    q = deque([[rx,ry,bx,by,1]])
+    visited[(rx,ry,bx,by)]=1         # 백트래킹
+    directions = [[0,1],[0,-1],[-1,0],[1,0]]  #이동
+    while q:
+        now = q.popleft()
+        rx,ry,bx,by,cnt = now[0],now[1],now[2],now[3],now[4]
+        if cnt>10:
+            break
+        for d in directions:
+            nry,nrx,rcnt = move(rx,ry,d[0],d[1])
+            nby,nbx,bcnt = move(bx,by,d[0],d[1])
+            if data[nby][nbx]!='O':
+                if data[nry][nrx]=='O':
+                    print(1)
+                    return
+                if nbx==nrx and nby==nry: # 구조적으로 빨강이 파랑에 겹치는 경우밖에없음
+                    if rcnt>bcnt:           # 이동횟수로 겹치는 구슬 되돌림
+                        nrx-=d[0]
+                        nry-=d[1]
+                    else:
+                        nbx-=d[0]
+                        nby-=d[1]
+                if (nrx,nry,nbx,nby) in visited:
+                    continue
+                visited[(nrx,nry,nbx,nby)]=1
+                q.append([nrx,nry,nbx,nby,cnt+1])
+    print(0)
+sol()
