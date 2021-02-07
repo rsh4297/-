@@ -1,0 +1,21 @@
+from collections import deque
+n = int(input())
+m = int(input())
+data = [[] for _ in range(n+1)]
+for _ in range(m):
+    a,b = map(int,input().split())
+    data[a].append(b)
+    data[b].append(a)
+visited = [False]*(n+1)
+def bfs():
+    q = deque()
+    q.append(1)
+    visited[1]=True
+    while q:
+        now = q.popleft()
+        for i in data[now]:
+            if not visited[i]:
+                visited[i]=True
+                q.append(i)
+bfs()
+print(visited.count(True)-1)
