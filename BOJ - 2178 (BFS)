@@ -1,0 +1,19 @@
+from collections import deque
+n,m = map(int,input().split())
+data =[[*map(int,' '.join(input()).split(' '))] for _ in range(n)]
+
+def bfs(x_,y_):
+    q = deque()
+    q.append((x_,y_,1))
+    data[x_][y_] = 0
+    while q:
+        x,y,cnt = q.popleft()
+        if x==n-1 and y==m-1:
+            return cnt
+        for dx,dy in (1,0),(-1,0),(0,1),(0,-1):
+            nx = x+dx;ny=y+dy
+            if nx<0 or ny<0 or nx>=n or ny>=m:continue
+            if data[nx][ny]:
+                data[nx][ny]=0
+                q.append((nx,ny,cnt+1))
+print(bfs(0,0))
