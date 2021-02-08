@@ -1,0 +1,38 @@
+from collections import deque
+import sys;input = sys.stdin.readline
+m,n,h = map(int,input().split())
+q = deque()
+data = [[] for _ in range(h)]
+for k in range(h):
+    for i in range(n):
+        data[k].append(list(map(int,input().rstrip().split())))
+        for j in range(m):
+            if data[k][i][j]==1:
+                q.append((0,i,j,k))
+ans = 0
+def bfs():
+    global q
+    while q:
+        day,x,y,z = q.popleft()
+        if z + 1 < h:
+            if not data[z + 1][x][y]:
+                data[z + 1][x][y] = 1
+                q.append((day + 1, x, y, z + 1))
+        if z - 1 >= 0:
+            if not data[z - 1][x][y]:
+                data[z - 1][x][y] = 1
+                q.append((day + 1, x, y, z - 1))
+        for dx,dy in (0,1),(0,-1),(1,0),(-1,0):
+            nx = x+dx;ny = y+dy
+            if 0<=nx<n and 0<=ny<m:
+                if not data[z][nx][ny]:
+                    data[z][nx][ny] = 1
+                    q.append((day+1,nx,ny,z))
+
+    return day
+ans = bfs()
+for k in range(h):
+    for i in range(n):
+        if ''.join(map(str,data[k][i])).count('0'):
+            print(-1);exit()
+print(ans)
