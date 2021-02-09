@@ -1,0 +1,41 @@
+import sys; input =sys.stdin.readline
+n,m = map(int,input().split())
+data = [[*map(int,input().rstrip().split())] for _ in range(n)]
+from itertools import repeat
+visit = [[False]*m for _ in range(n)]
+def clear():
+    for i in range(n):
+        visit[i][:] = repeat(False,m)
+def bfs(x_,y_):
+    q = [(x_,y_)]
+    cnt = 0
+    if data[x_][y_]==1:
+        data[x_][y_]=0
+        cnt+=1
+    visit[x_][y_] = True
+    while q:
+        new_q = []
+        for x,y in q:
+            for dx,dy in (1,0),(-1,0),(0,1),(0,-1):
+                nx = x+dx;ny = y+dy
+                if 0<=nx<n and 0<=ny<m and not visit[nx][ny]:
+                    if data[nx][ny]==0:
+                        visit[nx][ny]=True
+                        new_q.append((nx,ny))
+                    else:
+                        data[nx][ny]=0
+                        visit[nx][ny]=True
+                        cnt+=1
+        q = new_q
+    return cnt
+def check():
+    for i in range(n):
+        if ''.join(map(str,data[i])).count('0')!=m:
+            return False
+    return True
+time,count = 0,0
+while not check():
+    count = bfs(0,0)
+    time+=1;
+    clear()
+print(time,count,sep='\n')
