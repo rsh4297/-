@@ -1,0 +1,12 @@
+import sys
+sys.setrecursionlimit(10**6)
+n = int(input())
+data = [*map(int,input().split())]+[-int(1e9)]
+dp = [data[0]]+[-int(1e9)]*100000
+
+def sol(n):
+    if dp[n]!=-int(1e9):return dp[n]
+    dp[n] = max(data[n],sol(n-1)+data[n])
+    return dp[n]
+sol(n)
+print(max(dp))
