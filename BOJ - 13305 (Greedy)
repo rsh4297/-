@@ -1,0 +1,14 @@
+n = int(input())
+dist = [*map(int,input().split())]
+data = [*map(int,input().split())]
+i,j = 0,1
+sub = 0
+while j!=n:
+    if data[i]<data[j]: # 다음 주유소의 기름값이 더 비쌀때 필요한거리만큼 충전 후 다시 다음 주유소와 비교
+        sub+=data[i]*dist[j-1]
+        j+=1
+    else:
+        sub+=data[i]*dist[j-1]
+        i = j; j+=1
+print(sub)
+                        # 만약 해당 주유소의 기름값이 더 비싸다면 필요한 거리만큼만충전후 넘어감
