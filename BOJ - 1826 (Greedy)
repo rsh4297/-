@@ -1,0 +1,18 @@
+import heapq,sys;input = sys.stdin.readline
+n = int(input())
+data = []
+for _ in range(n):
+    data.append([*map(int,input().split())])
+data.sort()
+des,fuel = map(int,input().split())
+q = []
+cnt = 0
+while fuel<des:
+    while data and data[0][0]<=fuel:
+            heapq.heappush(q,-data[0][1])
+            data.pop(0)
+    if not q:                     # not q 조건 제어위치를 잘 구분해야함
+        print(-1);exit()
+    fuel-=heapq.heappop(q)
+    cnt+=1
+print(cnt)
