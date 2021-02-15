@@ -1,0 +1,11 @@
+import heapq
+import sys; input = sys.stdin.readline
+n,k = map(int,input().split())
+jew = sorted([list(map(int,input().split())) for _ in range(n)],key= lambda x:-x[0])
+bag = sorted([int(input()) for _ in range(k)])
+q = [];ans=0
+for x in bag:
+    while jew and x>=jew[-1][0]:  # 무게순(내림)  가장 낮은 무게부터 담을수있는것들 모두담음
+        heapq.heappush(q,-jew.pop()[1])
+    if q:ans-=heapq.heappop(q)            # 담을 가방이 있다면 담을수 있는 보석들중 가장 비싼보석 담기
+print(ans)
