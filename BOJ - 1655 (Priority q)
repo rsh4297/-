@@ -1,0 +1,16 @@
+import heapq
+import sys; input = sys.stdin.readline
+
+left,right = [],[]
+for _ in range(int(input())):
+    num = int(input())
+    if len(left)==len(right):                 # 좌,우 (최소,최대힙)
+        heapq.heappush(left,(-num,num))
+    else:
+        heapq.heappush(right,(num,num))
+    if right and left[0][1]>right[0][1]:      # 중간에 최소힙(최대)이 최대힙(최소) 보다 클때
+        left_val = heapq.heappop(left)[1]
+        right_val = heapq.heappop(right)[1]
+        heapq.heappush(left,(-right_val,right_val))
+        heapq.heappush(right,(left_val,left_val))
+    print(left[0][1])
