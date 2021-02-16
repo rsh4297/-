@@ -1,0 +1,22 @@
+import sys ;input = sys.stdin.readline
+from functools import cmp_to_key
+k,n = map(int,input().split())
+data = [int(input()) for _ in range(k)]
+mx = max(data)                              # max( [list] ) case => O ( element ) (= O(N)
+
+# =>  leastest time                         #  len(mx) ->  max_num   =>  O ( 1 + n-k )
+# max_len = 0
+# for _ in range(k):
+#     x = input()
+#     data.append(x)
+#     if mx<len(x):
+#         mx = len(x)
+# max_num = sorted(s for s in data if len(s)==mx,reverse = True)[0]
+# for _ in range(n-k):
+#     data.append(max_num)
+
+
+for i in range(n-k):
+    data.append(mx)
+data = sorted(data,key=cmp_to_key(lambda a,b:-1 if int(str(a)+str(b))>int(str(b)+str(a)) else 1))
+print(*data,sep='')
