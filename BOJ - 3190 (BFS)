@@ -1,0 +1,34 @@
+from collections import deque
+import sys; input = sys.stdin.readline
+n = int(input())
+k = int(input())
+board = [[0]*(n+1) for _ in range(n+1)]
+time = [];dx = [-1,0,1,0];dy=[0,1,0,-1]
+for _ in range(k):
+    a,b = map(int,input().split())
+    board[a-1][b-1] = 1
+for i in range(int(input())):
+    T,C = input().split()
+    if C=='D': time.append((int(T),1))
+    else: time.append((int(T),3))
+time.reverse()
+def bfs():
+    dir = 1
+    q = deque()
+    q.append((0,0,1))
+    visit = [[False]*(n+1) for _ in range(n+1)]
+    while q:
+        x,y,Time = q[-1]
+        nx,ny = x+dx[dir],y+dy[dir]
+        if nx>=n or nx<0 or ny>=n or ny<0 or visit[nx][ny] :break
+        if not board[nx][ny]:
+            x_,y_,_= q.popleft()
+            visit[x_][y_]=False
+        else: board[nx][ny] = 0
+        visit[nx][ny] = True
+        q.append((nx,ny,Time+1))
+        if time and Time==time[-1][0]:
+            dir = (dir+time[-1][1])%4           # 각도 변환
+            time.pop()
+    print(Time)
+bfs()
