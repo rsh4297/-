@@ -1,0 +1,19 @@
+import sys;input = sys.stdin.readline
+n,m = map(int,input().split())
+data = [int(input()) for _ in range(n)]
+data.sort()
+def sol(num):
+    sub=0
+    for x in data:
+        sub+=num//x
+    return sub>=m
+s,e = 0,m*min(data);ans =e
+while s<=e:
+    mid =(s+e)//2
+    if sol(mid):
+        if ans > mid:
+            ans = mid
+        e = mid -1
+    else:
+        s = mid+1
+print(ans)
