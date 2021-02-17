@@ -1,0 +1,36 @@
+from collections import deque
+import math
+n,k = map(int,input().split())
+data = [[0,0],]
+for _ in range(n):
+    data.append([*map(int,input().split())])
+data.append([10000,10000])          # 도착지점 추가
+n+=2
+def bfs(num):
+    q = deque()
+    q.append((0,0))
+    visit = [False] * n
+    visit[0] = True
+    while q:
+        node,cnt = q.popleft()
+        if node==n-1:return True            
+        if cnt==k+1: continue           # 경유횟수 조건 이탈
+        for i in range(n):
+            if visit[i]: continue
+            a = abs(data[node][0]-data[i][0])**2+\        
+                 abs(data[node][1]-data[i][1])**2
+            if math.sqrt(a)<=num*10:  
+                visit[i]=True             # 연료 조건 만족시 방문처리
+                if i==n-1:return True
+                q.append((i,cnt+1))
+    return False
+s,e = 1,2000;ans=2000                 # 최대치 => 200000000**.5 => 142xx.xxxxx => 1430
+while s<=e:
+    mid =(s+e)//2
+    if bfs(mid):
+        if ans > mid:
+            ans = mid
+        e = mid-1                   # 최솟값 찾기 e 감소 s 증가
+    else:
+        s = mid+1
+print(ans)
