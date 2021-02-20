@@ -1,0 +1,36 @@
+import copy
+max = 100001
+
+def sol(x):
+    global data_a
+    data_a = copy.deepcopy(data)
+    cnt = 0
+    for i in range(n-1):                          # 오른쪽구간 체크
+        if data_a[i+1]-data_a[i] > x:
+            cnt+=data_a[i+1]-(data_a[i]+x)
+            data_a[i+1] = data_a[i]+x
+          
+    for i in range(n-1,0,-1):                     # 왼쪽구간 체크
+        if data_a[i-1] - data_a[i] > x:
+            cnt+=data_a[i-1]-(data_a[i]+x)
+            data_a[i-1] = data_a[i]+x
+    if cnt<=T:
+        return True
+    return False
+
+if "__main__"==__name__:
+    n,T = map(int,input().split())
+    s,e = 0,int(1e9)
+    result = [0 for _ in range(n)]
+    data = [*map(int,input().split())]
+    data_a = []
+    while s<=e:
+        mid = (s+e)//2
+        if sol(mid):
+            for i in range(n):
+                result[i] = data_a[i]
+            e = mid - 1
+        else:
+            s = mid + 1
+    for i in range(n):
+        print(result[i],end=' ')
